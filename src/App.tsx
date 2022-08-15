@@ -9,6 +9,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Feed} from "./features/feed";
 import {FeedInternal} from "./features/feedInternal";
 import {Routes} from "./routes";
+import {GlobalContext} from "./store";
 
 // https://api.unsplash.com/photos/?client_id=eroauhNFSRgaJ0ywQBDb8UnKJ6_je9AK0A--6WNuPN8
 
@@ -18,11 +19,16 @@ import {Routes} from "./routes";
 export default function App() {
   React.useEffect(() => {
     LogBox.ignoreLogs(["deprecated-react-native-prop-types"]);
+    LogBox.ignoreAllLogs();
   }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Routes />
-      <StatusBar />
+      <GlobalContext>
+        <>
+          <Routes />
+          <StatusBar />
+        </>
+      </GlobalContext>
     </SafeAreaView>
   );
 }

@@ -1,6 +1,13 @@
 import React from "react";
 import {StatusBar} from "expo-status-bar";
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import {fetcher, ImageEndpoint} from "../../services";
 import {CustomText} from "../../ds/CustomText";
 import {Highlight} from "./components/Highligh";
@@ -9,13 +16,16 @@ import {FeedItem} from "./components/FeedItem";
 import {FeedImage} from "./components/FeedImage";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
 import {Box} from "../../ds/Box";
+import {GlobalStateContext, UPDATE_USER_NAME} from "../../store";
 
 const stories = ["Programação", "Lorem", "Ipsum", "Aulas", "Javascript"];
 
 const Tab = createMaterialTopTabNavigator();
 
 export const Feed = () => {
+  const {state, dispatch} = React.useContext(GlobalStateContext);
   const [images, setImages] = React.useState<ImageEndpoint[]>([]);
+  const [name, setName] = React.useState("");
 
   React.useEffect(() => {
     fetcher("photos").then(setImages);
@@ -49,7 +59,28 @@ export const Feed = () => {
                 <CustomText>seguindo</CustomText>
               </View>
             </View>
-            <CustomText>Let's Code</CustomText>
+            {state.user.name ? (
+              <CustomText>{state.user.name}</CustomText>
+            ) : (
+              <Box>
+                <TextInput
+                  placeholder="Atualize o seu nome"
+                  value={name}
+                  onChangeText={setName}
+                />
+                <Button
+                  onPress={() => {
+                    dispatch({
+                      type: UPDATE_USER_NAME,
+                      payload: {
+                        name,
+                      },
+                    });
+                  }}
+                  title="OK"
+                />
+              </Box>
+            )}
             <CustomText>Escola de programação</CustomText>
           </View>
         </View>
