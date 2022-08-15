@@ -6,10 +6,11 @@ import React from "react";
 import {LogBox} from "react-native";
 
 import {SafeAreaView} from "react-native-safe-area-context";
+import {Provider} from "react-redux";
 import {Feed} from "./features/feed";
 import {FeedInternal} from "./features/feedInternal";
 import {Routes} from "./routes";
-import {GlobalContext} from "./store";
+import {GlobalContext, store} from "./store";
 
 // https://api.unsplash.com/photos/?client_id=eroauhNFSRgaJ0ywQBDb8UnKJ6_je9AK0A--6WNuPN8
 
@@ -23,12 +24,12 @@ export default function App() {
   }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
-      <GlobalContext>
+      <Provider store={store}>
         <>
           <Routes />
           <StatusBar />
         </>
-      </GlobalContext>
+      </Provider>
     </SafeAreaView>
   );
 }

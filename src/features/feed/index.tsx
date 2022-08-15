@@ -16,16 +16,19 @@ import {FeedItem} from "./components/FeedItem";
 import {FeedImage} from "./components/FeedImage";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
 import {Box} from "../../ds/Box";
-import {GlobalStateContext, UPDATE_USER_NAME} from "../../store";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store";
+import {userSlice} from "../../store/userStore";
 
 const stories = ["Programação", "Lorem", "Ipsum", "Aulas", "Javascript"];
 
 const Tab = createMaterialTopTabNavigator();
 
 export const Feed = () => {
-  const {state, dispatch} = React.useContext(GlobalStateContext);
   const [images, setImages] = React.useState<ImageEndpoint[]>([]);
   const [name, setName] = React.useState("");
+  const state = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     fetcher("photos").then(setImages);
@@ -59,8 +62,8 @@ export const Feed = () => {
                 <CustomText>seguindo</CustomText>
               </View>
             </View>
-            {state.user.name ? (
-              <CustomText>{state.user.name}</CustomText>
+            {state.userSlice.user.name ? (
+              <CustomText>{state.userSlice.user.name}</CustomText>
             ) : (
               <Box>
                 <TextInput
@@ -70,12 +73,7 @@ export const Feed = () => {
                 />
                 <Button
                   onPress={() => {
-                    dispatch({
-                      type: UPDATE_USER_NAME,
-                      payload: {
-                        name,
-                      },
-                    });
+                    dispatch(userSlice.actions.changeUserName(name));
                   }}
                   title="OK"
                 />

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TextInput} from "react-native";
 import {Box} from "../../ds/Box";
@@ -6,13 +6,17 @@ import {ButtonText, CustomButton} from "../../ds/CustomButton";
 import {CustomText} from "../../ds/CustomText";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
 import {StackType} from "../../routes/types";
-import {ADD_USER, GlobalStateContext} from "../../store";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store";
+import {userSlice} from "../../store/userStore";
 
 export const Login = () => {
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state.userSlice);
+
   const navigation = useNavigation<NavigationProp<StackType>>();
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const {dispatch} = useContext(GlobalStateContext);
 
   const loginHandler = async () => {
     try {
@@ -23,8 +27,8 @@ export const Login = () => {
           responseObject?.password === password) ||
         true
       ) {
-        dispatch({type: ADD_USER, payload: {username, password}});
-
+        // dispatch({type: ADD_USER, payload: {username, password}});
+        dispatch(userSlice.actions.addUser({username, password}));
         navigation.navigate("feed");
       }
     } catch (error) {
